@@ -1,0 +1,6 @@
+build.bat --build --update --use_featurizers --cmake_generator "Visual Studio 15 2017"  --skip_submodule_sync --skip_tests
+
+baseline:
+
+
+test:
