@@ -63,7 +63,7 @@ class CatImputerTransformer final : public OpKernel {
   }
 
   Status Compute(OpKernelContext* ctx) const override {
-    utils::MLTypeCallDispatcher<CatImputerTransformerImpl, float, double, std::string> t_disp(ctx->Input<Tensor>(1)->GetElementType());
+    utils::MLTypeCallDispatcher<CatImputerTransformerImpl, double, std::string> t_disp(ctx->Input<Tensor>(1)->GetElementType());
     t_disp.Invoke(ctx);
     return Status::OK();
   }
@@ -76,7 +76,7 @@ ONNX_OPERATOR_KERNEL_EX(
     kCpuExecutionProvider,
     KernelDefBuilder()
         .TypeConstraint("T0", DataTypeImpl::GetTensorType<uint8_t>())
-        .TypeConstraint("T", {DataTypeImpl::GetTensorType<float>(),
+        .TypeConstraint("T", {
                               DataTypeImpl::GetTensorType<double>(),
                               DataTypeImpl::GetTensorType<std::string>()}),
     CatImputerTransformer);

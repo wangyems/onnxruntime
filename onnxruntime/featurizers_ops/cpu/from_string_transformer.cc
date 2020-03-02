@@ -65,8 +65,8 @@ class FromStringTransformer final : public OpKernel {
   }
 
   Status Compute(OpKernelContext* ctx) const override {
-    utils::MLTypeCallDispatcher<FromStringTransformerImpl, int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t,
-                                int64_t, uint64_t, float, double, bool, std::string>
+    utils::MLTypeCallDispatcher<FromStringTransformerImpl,
+                                int64_t, uint64_t, double, bool, std::string>
         t_disp(result_type_);
     t_disp.Invoke(ctx);
     return Status::OK();
