@@ -72,7 +72,7 @@ class MaxAbsScalerTransformer final : public OpKernel {
 
   Status Compute(OpKernelContext* ctx) const override {
     utils::MLTypeCallDispatcher<MaxAbsScalerTransformerImpl,
-                                int64_t, uint64_t, double>
+                                double>
         t_disp(ctx->Input<Tensor>(1)->GetElementType());
     t_disp.Invoke(ctx);
     return Status::OK();
@@ -87,8 +87,6 @@ ONNX_OPERATOR_KERNEL_EX(
     KernelDefBuilder()
         .TypeConstraint("T0", DataTypeImpl::GetTensorType<uint8_t>())
         .TypeConstraint("InputT", {
-                                   DataTypeImpl::GetTensorType<int64_t>(),
-                                   DataTypeImpl::GetTensorType<uint64_t>(),
                                    DataTypeImpl::GetTensorType<double>()}),
     MaxAbsScalerTransformer);
 }  // namespace featurizers

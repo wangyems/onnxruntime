@@ -54,7 +54,7 @@ class ImputationMarkerTransformer final : public OpKernel {
   }
 
   Status Compute(OpKernelContext* ctx) const override {
-    utils::MLTypeCallDispatcher<ImputationMarkerTransformerImpl, double, std::string> t_disp(ctx->Input<Tensor>(1)->GetElementType());
+    utils::MLTypeCallDispatcher<ImputationMarkerTransformerImpl, double> t_disp(ctx->Input<Tensor>(1)->GetElementType());
     t_disp.Invoke(ctx);
     return Status::OK();
   }
@@ -68,8 +68,8 @@ ONNX_OPERATOR_KERNEL_EX(
     KernelDefBuilder()
         .TypeConstraint("T0", DataTypeImpl::GetTensorType<uint8_t>())
         .TypeConstraint("InputT", {
-                                   DataTypeImpl::GetTensorType<double>(),
-                                   DataTypeImpl::GetTensorType<std::string>()}),
+                                   DataTypeImpl::GetTensorType<double>()
+                                   }),
     ImputationMarkerTransformer);
 
 }  // namespace featurizers
