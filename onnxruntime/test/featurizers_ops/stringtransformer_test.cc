@@ -5,6 +5,7 @@
 #include "test/providers/provider_test_utils.h"
 
 #include "Featurizers/StringFeaturizer.h"
+#include "Featurizers/StringFeaturizer.cpp"
 #include "Featurizers/../Archive.h"
 
 namespace NS = Microsoft::Featurizer;
