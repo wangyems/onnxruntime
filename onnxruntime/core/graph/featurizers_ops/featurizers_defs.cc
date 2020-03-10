@@ -144,28 +144,28 @@ void RegisterCatImputerFeaturizerVer1() {
 }
 
 void RegisterCountVectorizerFeaturizerVer1() {
-  static const char* doc = R"DOC(
-      Returns the count of the number of occurrances of each distinct item according to a
-      vocabulary established during training.
+  // static const char* doc = R"DOC(
+  //     Returns the count of the number of occurrances of each distinct item according to a
+  //     vocabulary established during training.
 
-      C++-style pseudo signature:
-        CountVector execute(std::string const &value);
+  //     C++-style pseudo signature:
+  //       CountVector execute(std::string const &value);
 
-      Examples:
-        Assuming the training data is...
-        ["orange apple orange grape", "grape carrot carrot apple", "peach banana orange banana"]
+  //     Examples:
+  //       Assuming the training data is...
+  //       ["orange apple orange grape", "grape carrot carrot apple", "peach banana orange banana"]
 
-        The input data is...
-        "banana grape grape apple apple apple orange"
+  //       The input data is...
+  //       "banana grape grape apple apple apple orange"
 
-        The result will be computed by...
-          categorize and compute each word's number of apperance in input data, we have "apple -> 3", "banana -> 1", "grape -> 2", "orange -> 1"
-          construct a dictionary and assign id for each unique word using training data, we have "apple -> 0", "banana -> 1", "grape -> 3", "orange -> 4"
-          generate TFStruct by combining <word's id, word's number of apperance>
+  //       The result will be computed by...
+  //         categorize and compute each word's number of apperance in input data, we have "apple -> 3", "banana -> 1", "grape -> 2", "orange -> 1"
+  //         construct a dictionary and assign id for each unique word using training data, we have "apple -> 0", "banana -> 1", "grape -> 3", "orange -> 4"
+  //         generate TFStruct by combining <word's id, word's number of apperance>
 
-        The result is...
-        [3, 1, 0, 2, 1]
-  )DOC";
+  //       The result is...
+  //       [3, 1, 0, 2, 1]
+  // )DOC";
 
   MS_FEATURIZERS_OPERATOR_SCHEMA(CountVectorizerTransformer)
       .SinceVersion(1)
@@ -1477,36 +1477,36 @@ void RegisterStringFeaturizerVer1() {
 }
 
 void RegisterTfidfVectorizerFeaturizerVer1() {
-  static const char* doc = R"DOC(
-      Convert a collection of raw documents to a matrix of TF-IDF features
+  // static const char* doc = R"DOC(
+  //     Convert a collection of raw documents to a matrix of TF-IDF features
 
-      C++-style pseudo signature:
-        TfidfVector execute(std::string const &value);
+  //     C++-style pseudo signature:
+  //       TfidfVector execute(std::string const &value);
 
-      Examples:
-        Assuming the training data is...
-        ["this is the first document", "this document is the second document", "and this is the third one", "is this the first document"]
+  //     Examples:
+  //       Assuming the training data is...
+  //       ["this is the first document", "this document is the second document", "and this is the third one", "is this the first document"]
 
-        Assuming the input data is...
-        "this is the first document"
-        The default result will be...
-        [0. , 0.469791f, 0.580286f, 0.384085f, 0. , 0. , 0.384085f, 0. , 0.384085f]
+  //       Assuming the input data is...
+  //       "this is the first document"
+  //       The default result will be...
+  //       [0. , 0.469791f, 0.580286f, 0.384085f, 0. , 0. , 0.384085f, 0. , 0.384085f]
 
-        Assuming the input data is...
-        "this document is the second document"
-        The default result will be...
-        [0. , 0.687624f, 0. , 0.281089f, 0. , 0.538648f, 0.281089f, 0. , 0.281089f]
+  //       Assuming the input data is...
+  //       "this document is the second document"
+  //       The default result will be...
+  //       [0. , 0.687624f, 0. , 0.281089f, 0. , 0.538648f, 0.281089f, 0. , 0.281089f]
 
-        Assuming the input data is...
-        "and this is the third one"
-        The default result will be...
-        [0.511849f, 0. , 0. , 0.267104f, 0.511849f, 0. , 0.267104f, 0.511849f, 0.267104f]
+  //       Assuming the input data is...
+  //       "and this is the third one"
+  //       The default result will be...
+  //       [0.511849f, 0. , 0. , 0.267104f, 0.511849f, 0. , 0.267104f, 0.511849f, 0.267104f]
 
-        Assuming the input data is...
-        "is this the first document"
-        The default result will be...
-        [0. , 0.469791f, ,0.580286f, 0.384085f, 0. , 0. , 0.384085f, 0. , 0.384085f]
-  )DOC";
+  //       Assuming the input data is...
+  //       "is this the first document"
+  //       The default result will be...
+  //       [0. , 0.469791f, ,0.580286f, 0.384085f, 0. , 0. , 0.384085f, 0. , 0.384085f]
+  // )DOC";
 
   MS_FEATURIZERS_OPERATOR_SCHEMA(TfidfVectorizerTransformer)
       .SinceVersion(1)
