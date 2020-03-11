@@ -27,9 +27,9 @@ TEST(FeaturizersTests, MaxHorizonTransformer) {
   std::vector<std::string> data_output = {"d1", "d1", "d2", "d2", "d3", "d3"};
   std::vector<uint32_t> horizon_origin = {1, 2, 1, 2, 1, 2};
 
-  test.AddOutput<int64_t>("Times", {static_cast<int64_t>(times_output.size())}, times_output);
-  test.AddOutput<std::string>("Keys", {static_cast<int64_t>(times_output.size()), static_cast<int64_t>(keys_output.size() / times_output.size())}, keys_output);
-  test.AddOutput<std::string>("Data", {static_cast<int64_t>(times_output.size()), static_cast<int64_t>(data_output.size() / times_output.size())}, data_output);
+  test.AddOutput<int64_t>("DuplicatedTimes", {static_cast<int64_t>(times_output.size())}, times_output);
+  test.AddOutput<std::string>("DuplicatedKeys", {static_cast<int64_t>(times_output.size()), static_cast<int64_t>(keys_output.size() / times_output.size())}, keys_output);
+  test.AddOutput<std::string>("DuplicatedData", {static_cast<int64_t>(times_output.size()), static_cast<int64_t>(data_output.size() / times_output.size())}, data_output);
   test.AddOutput<uint32_t>("HorizonOrigin", {static_cast<int64_t>(times_output.size())}, horizon_origin);
 
   test.Run();

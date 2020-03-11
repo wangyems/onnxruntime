@@ -37,7 +37,7 @@ void MaxHorizonTransformerImpl(OpKernelContext* ctx) {
   auto* data_output = ctx->Output(2, data_shape)->template MutableData<T>();
   auto* horizon_origin_output = ctx->Output(3, rows_shape)->template MutableData<uint32_t>();
 
-  //todo: need locality optimization
+  //todo: may need locality optimization
   for (int64_t row_idx = 0; row_idx < input_rows_num; ++row_idx) {
     for (uint32_t horizon_idx = 0; horizon_idx < *max_horizon_data; ++horizon_idx) {
       *times_output++ = *times_data;
@@ -47,6 +47,7 @@ void MaxHorizonTransformerImpl(OpKernelContext* ctx) {
         data_output[data_num_col_idx * output_rows_num + row_idx * (*max_horizon_data) + horizon_idx] = data_data[data_num_col_idx * input_rows_num + row_idx];
       *horizon_origin_output++ = horizon_idx + 1;
     }
+    times_data++;
   }
 }
 

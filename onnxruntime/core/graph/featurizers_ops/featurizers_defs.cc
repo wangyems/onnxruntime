@@ -819,17 +819,17 @@ void RegisterMaxHorizonFeaturizerVer1() {
           "T2")
       .Output(
           0,
-          "Times",
+          "DuplicatedTimes",
           "Tensor of timestamps, todo:",
           "T0")
       .Output(
           1,
-         "Keys",
+         "DuplicatedKeys",
           "Composite keys tensor, todo:",
           "T1")
       .Output(
           2,
-          "Data",
+          "DuplicatedData",
           "data tensor, todo:",
           "T1")
       .Output(
