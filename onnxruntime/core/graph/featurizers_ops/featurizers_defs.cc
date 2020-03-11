@@ -40,6 +40,7 @@ static void RegisterHashOneHotVectorizerFeaturizerVer1();
 static void RegisterImputationMarkerFeaturizerVer1();
 static void RegisterLabelEncoderFeaturizerVer1();
 static void RegisterMaxAbsScalerFeaturizerVer1();
+static void RegisterMaxHorizonFeaturizerVer1();
 static void RegisterMeanImputerFeaturizerVer1();
 static void RegisterMedianImputerFeaturizerVer1();
 static void RegisterMinMaxImputerFeaturizerVer1();
@@ -69,6 +70,7 @@ void RegisterMSFeaturizersSchemas() {
   RegisterImputationMarkerFeaturizerVer1();
   RegisterLabelEncoderFeaturizerVer1();
   RegisterMaxAbsScalerFeaturizerVer1();
+  RegisterMaxHorizonFeaturizerVer1();
   RegisterMeanImputerFeaturizerVer1();
   RegisterMedianImputerFeaturizerVer1();
   RegisterMinMaxImputerFeaturizerVer1();
@@ -741,6 +743,152 @@ void RegisterMaxAbsScalerFeaturizerVer1() {
 
             if (hasInputShape(ctx, 1)) {
               propagateShapeFromInputToOutput(ctx, 1, 0);
+            }
+          });
+}
+
+void RegisterMaxHorizonFeaturizerVer1() {
+  //static const char* doc = R"DOC(
+  //This Featurizer will be completely implemented in Frameworks(ORT and ML.NET).
+  //This Transformer adds rows according to maxHorizon and also appends a column
+  //which is horizon_origin. The overall number of output rows is maxHorizon times
+  //the input's number of rows.
+  //The type of input and output is abstracted to Tabular which corresponding to
+  //Tensor in OnnxRuntime and IDataView in ML.NET.
+  //C++-style pseudo signature:
+  //  Tabular execute(Tabular const &value)
+  //Examples:
+  //  The Transformer duplicate rows according to maxHorizon, and adding one
+  //  column called horizon_origin. The following example sets maxHorizon as 2.
+  //  Input:
+  //    +------------+-------+-------+
+  //    | date       | grain | sales |
+  //    +============+=======+=======+
+  //    | 2017-01-01 | A     |  0    |
+  //    +------------+-------+-------+
+  //    | 2017-02-01 | A     |  1    |
+  //    +------------+-------+-------+
+  //    | 2017-03-01 | A     |  2    |
+  //    +------------+-------+-------+
+  //    | 2017-04-01 | A     |  3    |
+  //    +------------+-------+-------+
+  //  Output:
+  //    +------------+-------+-------+----------------+
+  //    | date       | grain | sales | horizon_origin |
+  //    +============+=======+=======+================+
+  //    | 2017-01-01 | A     | 0     | 1              |
+  //    +------------+-------+-------+----------------+
+  //    | 2017-01-01 | A     | 0     | 2              |
+  //    +------------+-------+-------+----------------+
+  //    | 2017-02-01 | A     | 1     | 1              |
+  //    +------------+-------+-------+----------------+
+  //    | 2017-02-01 | A     | 1     | 2              |
+  //    +------------+-------+-------+----------------+
+  //    | 2017-03-01 | A     | 2     | 1              |
+  //    +------------+-------+-------+----------------+
+  //    | 2017-03-01 | A     | 2     | 2              |
+  //    +------------+-------+-------+----------------+
+  //    | 2017-04-01 | A     | 3     | 1              |
+  //    +------------+-------+-------+----------------+
+  //    | 2017-04-01 | A     | 3     | 2              |
+  //    +------------+-------+-------+----------------+
+  //  )DOC";
+
+  MS_FEATURIZERS_OPERATOR_SCHEMA(MaxHorizonTransformer)
+      .SinceVersion(1)
+      .SetDomain(kMSFeaturizersDomain)
+      .Input(
+          0,
+          "Times",
+          "Tensor of timestamps in seconds since epoch [R] where R is a number of rows.",
+          "T0")
+      .Input(
+          1,
+          "Keys",
+          "Composite keys tensor of shape [R][K]. R is the same as Input(1)",
+          "T1")
+      .Input(
+          2,
+          "Data",
+          "It is a data tensor of shape [R][C] where R - rows and C - columns. R must be the same with Input(1)",
+          "T1")
+      .Input(
+          3,
+          "MaxHorizon",
+          "It's the parameter max_horizon",
+          "T2")
+      .Output(
+          0,
+          "Times",
+          "Tensor of timestamps, todo:",
+          "T0")
+      .Output(
+          1,
+         "Keys",
+          "Composite keys tensor, todo:",
+          "T1")
+      .Output(
+          2,
+          "Data",
+          "data tensor, todo:",
+          "T1")
+      .Output(
+          3,
+          "HorizonOrigin",
+          "HorizonOrigin SequenceId, todo:",
+          "T2")
+      .TypeConstraint(
+          "T0",
+          {"tensor(int64)"},
+          "Represents number of seconds since epoch")
+      .TypeConstraint(
+          "T1",
+          {"tensor(string)"},
+          "Output data")
+      .TypeConstraint(
+          "T2",
+          {"tensor(uint32)"},
+          "Uint32 Tensor")
+      .TypeAndShapeInferenceFunction(
+          [](ONNX_NAMESPACE::InferenceContext& ctx) {
+            // Times and HorizonOrigin
+            propagateElemTypeFromInputToOutput(ctx, 0, 0);
+            propagateElemTypeFromDtypeToOutput(ctx, ONNX_NAMESPACE::TensorProto_DataType_UINT32, 3);
+            if (hasInputShape(ctx, 0)) {
+              const auto& input_0_shape = getInputShape(ctx, 0);
+              if (input_0_shape.dim_size() != 1) {
+                fail_shape_inference("Expecting Times to have 1 dimension");
+              }
+              ONNX_NAMESPACE::TensorShapeProto shape_0_3;
+              *shape_0_3.add_dim() = 2 * input_0_shape.dim(0)
+              ONNX_NAMESPACE::updateOutputShape(ctx, 0, shape_0_3);
+              ONNX_NAMESPACE::updateOutputShape(ctx, 3, shape_0_3);
+            }
+
+            // Keys
+            propagateElemTypeFromInputToOutput(ctx, 1, 1);
+            if (hasInputShape(ctx, 1)) {
+              const auto& input_1_shape = getInputShape(ctx, 1);
+              if (input_1_shape.dim_size() != 2) {
+                fail_shape_inference("Expecting keys to have 2 dimensions");
+              }
+              ONNX_NAMESPACE::TensorShapeProto shape;
+              *shape.add_dim() = 2 * input_1_shape.dim(0);
+              *shape.add_dim() = input_1_shape.dim(1);
+              ONNX_NAMESPACE::updateOutputShape(ctx, 1, shape);
+            }
+
+            // Data
+            propagateElemTypeFromInputToOutput(ctx, 2, 2);
+            if (hasInputShape(ctx, 2)) {
+              const auto& input_2_shape = getInputShape(ctx, 2);
+              if (input_2_shape.dim_size() != 2) {
+                fail_shape_inference("Expecting data to have 2 dimensions");
+              }
+              ONNX_NAMESPACE::TensorShapeProto shape;
+              *shape.add_dim() = 2 * input_2_shape.dim(0);
+              *shape.add_dim() = input_2_shape.dim(1);
+              ONNX_NAMESPACE::updateOutputShape(ctx, 2, shape);
             }
           });
 }
