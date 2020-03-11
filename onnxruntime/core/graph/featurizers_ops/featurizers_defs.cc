@@ -860,7 +860,7 @@ void RegisterMaxHorizonFeaturizerVer1() {
                 fail_shape_inference("Expecting Times to have 1 dimension");
               }
               ONNX_NAMESPACE::TensorShapeProto shape_0_3;
-              *shape_0_3.add_dim() = 2 * input_0_shape.dim(0)
+              shape_0_3.add_dim();
               ONNX_NAMESPACE::updateOutputShape(ctx, 0, shape_0_3);
               ONNX_NAMESPACE::updateOutputShape(ctx, 3, shape_0_3);
             }
@@ -873,7 +873,7 @@ void RegisterMaxHorizonFeaturizerVer1() {
                 fail_shape_inference("Expecting keys to have 2 dimensions");
               }
               ONNX_NAMESPACE::TensorShapeProto shape;
-              *shape.add_dim() = 2 * input_1_shape.dim(0);
+              shape.add_dim();
               *shape.add_dim() = input_1_shape.dim(1);
               ONNX_NAMESPACE::updateOutputShape(ctx, 1, shape);
             }
@@ -886,7 +886,7 @@ void RegisterMaxHorizonFeaturizerVer1() {
                 fail_shape_inference("Expecting data to have 2 dimensions");
               }
               ONNX_NAMESPACE::TensorShapeProto shape;
-              *shape.add_dim() = 2 * input_2_shape.dim(0);
+              shape.add_dim();
               *shape.add_dim() = input_2_shape.dim(1);
               ONNX_NAMESPACE::updateOutputShape(ctx, 2, shape);
             }
