@@ -11,7 +11,6 @@
 namespace onnxruntime {
 namespace featurizers {
 
-template <typename T>
 void MaxHorizonTransformerImpl(OpKernelContext* ctx) {
   const auto& input_times = *ctx->Input<Tensor>(0);
   const auto& input_keys = *ctx->Input<Tensor>(1);
@@ -23,8 +22,8 @@ void MaxHorizonTransformerImpl(OpKernelContext* ctx) {
   const int64_t data_num_per_row = input_data.Shape()[1];
 
   const int64_t* times_data = input_times.template Data<int64_t>();
-  const T* const keys_data = input_keys.template Data<T>();
-  const T* const data_data = input_data.template Data<T>();
+  const std::string* const keys_data = input_keys.template Data<std::string>();
+  const std::string* const data_data = input_data.template Data<std::string>();
   const uint32_t* max_horizon_data = input_max_horizon.template Data<uint32_t>();
 
   int64_t output_rows_num = (*max_horizon_data) * input_rows_num;
@@ -33,8 +32,8 @@ void MaxHorizonTransformerImpl(OpKernelContext* ctx) {
   TensorShape data_shape({output_rows_num, data_num_per_row});
 
   auto* times_output = ctx->Output(0, rows_shape)->template MutableData<int64_t>();
-  auto* keys_output = ctx->Output(1, keys_shape)->template MutableData<T>();
-  auto* data_output = ctx->Output(2, data_shape)->template MutableData<T>();
+  auto* keys_output = ctx->Output(1, keys_shape)->template MutableData<std::string>();
+  auto* data_output = ctx->Output(2, data_shape)->template MutableData<std::string>();
   auto* horizon_origin_output = ctx->Output(3, rows_shape)->template MutableData<uint32_t>();
 
   //todo: may need locality optimization
@@ -57,7 +56,7 @@ class MaxHorizonTransformer final : public OpKernel {
   }
 
   Status Compute(OpKernelContext* ctx) const override {
-    MaxHorizonTransformerImpl<std::string>(ctx);
+    MaxHorizonTransformerImpl(ctx);
     return Status::OK();
   }
 };
@@ -69,8 +68,8 @@ ONNX_OPERATOR_KERNEL_EX(
     kCpuExecutionProvider,
     KernelDefBuilder()
         .TypeConstraint("T0", DataTypeImpl::GetTensorType<int64_t>())
-        .TypeConstraint("T1", DataTypeImpl::GetTensorType<std::string>())
-        .TypeConstraint("T2", DataTypeImpl::GetTensorType<uint32_t>()),
+        .TypeConstraint("T1", DataTypeImpl::GetTensorType<std::string>()),
+        //.TypeConstraint("T2", DataTypeImpl::GetTensorType<uint32_t>()), ?
     MaxHorizonTransformer
   );
 }  // namespace featurizers

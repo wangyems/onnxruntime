@@ -20,7 +20,7 @@ TEST(FeaturizersTests, MaxHorizonTransformer) {
   test.AddInput<int64_t>("Times", {static_cast<int64_t>(times_input.size())}, times_input);
   test.AddInput<std::string>("Keys", {static_cast<int64_t>(times_input.size()), static_cast<int64_t>(keys_input.size() / times_input.size())}, keys_input);
   test.AddInput<std::string>("Data", {static_cast<int64_t>(times_input.size()), static_cast<int64_t>(data_input.size() / times_input.size())}, data_input);
-  test.AddInput<uint32_t>("MaxHorizon", {static_cast<int64_t>(1)}, max_horizon);
+  test.AddInput<uint32_t>("MaxHorizon", {1}, max_horizon);
 
   std::vector<int64_t> times_output = {1, 1, 2, 2, 3, 3};
   std::vector<std::string> keys_output = {"a1", "a1", "b1", "b1", "c1", "c1", "a2", "a2", "b2", "b2", "c2", "c2"};
