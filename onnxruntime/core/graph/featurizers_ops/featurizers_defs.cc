@@ -754,8 +754,7 @@ void RegisterLagLeadOperatorFeaturizerVer1() {
           "No information is available")
       .TypeConstraint(
           "T",
-          //{"tensor(int8)", "tensor(uint8)", "tensor(int16)",  "tensor(uint16)", "tensor(int32)", "tensor(uint32)", "tensor(int64)", "tensor(uint64)", "tensor(float)", "tensor(double)", "tensor(string)"},
-          {"tensor(float)", "tensor(double)"},
+          {"tensor(int8)", "tensor(uint8)", "tensor(int16)",  "tensor(uint16)", "tensor(int32)", "tensor(uint32)", "tensor(int64)", "tensor(uint64)", "tensor(float)", "tensor(double)"},
           "No information is available")
       .TypeConstraint(
           "OutputT",
