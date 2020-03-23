@@ -743,7 +743,7 @@ void RegisterLagLeadOperatorFeaturizerVer1() {
           0,
           "Output",
           "Output tensor of shape [R][P][Q]",
-          "T")
+          "OutputT")
       .TypeConstraint(
           "T0",
           {"tensor(uint8)"},
@@ -754,7 +754,12 @@ void RegisterLagLeadOperatorFeaturizerVer1() {
           "No information is available")
       .TypeConstraint(
           "T",
-          {"tensor(int8)", "tensor(uint8)", "tensor(int16)",  "tensor(uint16)", "tensor(int32)", "tensor(uint32)", "tensor(int64)", "tensor(uint64)", "tensor(float)", "tensor(double)", "tensor(string)"},
+          //{"tensor(int8)", "tensor(uint8)", "tensor(int16)",  "tensor(uint16)", "tensor(int32)", "tensor(uint32)", "tensor(int64)", "tensor(uint64)", "tensor(float)", "tensor(double)", "tensor(string)"},
+          {"tensor(float)", "tensor(double)"},
+          "No information is available")
+      .TypeConstraint(
+          "OutputT",
+          {"tensor(double)"},
           "No information is available")
       .TypeAndShapeInferenceFunction(
           [](ONNX_NAMESPACE::InferenceContext& ctx) {

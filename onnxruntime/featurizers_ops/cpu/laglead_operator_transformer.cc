@@ -53,7 +53,7 @@ struct LagLeadOperatorTransformerImpl {
       for (int32_t i = 0; i < output_dim_1; ++i) {
         for (int32_t j = 0; j < output_dim_2; ++j) {
           if (value(i, j).has_value()) {
-            *output_data++ = static_cast<T>(*value(i, j));
+            *output_data++ = *value(i, j);
           } else {
             *output_data++ = NS::Traits<T>::CreateNullValue();
             //*output_data++ = static_cast<T>(0);
@@ -89,8 +89,9 @@ class LagLeadOperatorTransformer final : public OpKernel {
   }
 
   Status Compute(OpKernelContext* ctx) const override {
-    utils::MLTypeCallDispatcher<LagLeadOperatorTransformerImpl, int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t,
-                                int64_t, uint64_t, float, double, std::string>
+    utils::MLTypeCallDispatcher<LagLeadOperatorTransformerImpl, //int8_t, uint8_t, int16_t, uint16_t, int32_t, uint32_t,
+                                //int64_t, uint64_t,
+                                float, double>//, std::string>
         t_disp(ctx->Input<Tensor>(2)->GetElementType());
     t_disp.Invoke(ctx);
     return Status::OK();
@@ -105,17 +106,17 @@ ONNX_OPERATOR_KERNEL_EX(
     KernelDefBuilder()
         .TypeConstraint("T0", DataTypeImpl::GetTensorType<uint8_t>())
         .TypeConstraint("GrainT", DataTypeImpl::GetTensorType<std::string>())
-        .TypeConstraint("T", {DataTypeImpl::GetTensorType<int8_t>(),
-                              DataTypeImpl::GetTensorType<uint8_t>(),
-                              DataTypeImpl::GetTensorType<int16_t>(),
-                              DataTypeImpl::GetTensorType<uint16_t>(),
-                              DataTypeImpl::GetTensorType<int32_t>(),
-                              DataTypeImpl::GetTensorType<uint32_t>(),
-                              DataTypeImpl::GetTensorType<int64_t>(),
-                              DataTypeImpl::GetTensorType<uint64_t>(),
+        .TypeConstraint("T", {//DataTypeImpl::GetTensorType<int8_t>(),
+                              //DataTypeImpl::GetTensorType<uint8_t>(),
+                              //DataTypeImpl::GetTensorType<int16_t>(),
+                              //DataTypeImpl::GetTensorType<uint16_t>(),
+                              //DataTypeImpl::GetTensorType<int32_t>(),
+                              //DataTypeImpl::GetTensorType<uint32_t>(),
+                              //DataTypeImpl::GetTensorType<int64_t>(),
+                              //DataTypeImpl::GetTensorType<uint64_t>(),
                               DataTypeImpl::GetTensorType<float>(),
-                              DataTypeImpl::GetTensorType<double>(),
-                              DataTypeImpl::GetTensorType<std::string>()
+                              DataTypeImpl::GetTensorType<double>()
+                              //DataTypeImpl::GetTensorType<std::string>()
                               }),
     LagLeadOperatorTransformer);
 }  // namespace featurizers
