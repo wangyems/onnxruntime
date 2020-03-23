@@ -44,11 +44,9 @@ struct LagLeadOperatorTransformerImpl {
     //hard code for temporary
 
     double* output_data;
-
     bool has_allocate_output_data = false;
-
     std::function<void(OutputType)> callback_fn;
-    callback_fn = [&ctx, &output_data, &has_allocate_output_data, &output_dim_0](OutputType value) -> void {
+    callback_fn = [&ctx, &output_data, &has_allocate_output_data, &output_dim_0](OutputType const & value) -> void {
       if (!has_allocate_output_data) {
         TensorShape output_shape({output_dim_0, value.rows(), value.cols()});
         Tensor* output_tensor(ctx->Output(0, output_shape));
@@ -59,7 +57,7 @@ struct LagLeadOperatorTransformerImpl {
                       value.data(),
                       value.data() + value.size(),
                       output_data,
-                      [](nonstd::optional<T> x) -> double {
+                      [](nonstd::optional<T> const & x) -> double {
                         return x.has_value() ? static_cast<double>(*x) : NS::Traits<double>::CreateNullValue();
                       }
                     );
