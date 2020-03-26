@@ -677,48 +677,48 @@ void RegisterLabelEncoderFeaturizerVer1() {
 
 void RegisterLagLeadOperatorFeaturizerVer1() {
   //static const char* doc = R"DOC(
-  //      Copying values from prior or future per grain. Works for general time series data sets.
-  //        The Horizon represents the maximum value in a range [1, N], where each element in that range is a delta applied to each offset. The resulting matrix will be in the form:
-  //        [
-  //        [value[offset[0] - N], value[offset[0] - (N - 1)], ..., value[offset[0] - 1]],
-  //        [value[offset[1] - N], value[offset[1] - (N - 1)], ..., value[offset[1] - 1]],
-  //        ...
-  //        [value[offset[K - 1] - N], value[offset[K - 1] - (N - 1)], ..., value[offset[K - 1] - 1]]
-  //        ]
-  //        The resulting matrix size is K rows x N cols, where K is the number of offsets and N is the horizon.
-  //        Horizon and offsets should be passed in during construction. Offsets are passed in as a vector of ints so multiple lag orders can be applied within one featurizer call.
-  //        Output type is a matrix of double where rows are grouped by different offsets and columns are grouped by horizon.
-  //        C++-style pseudo signature:
-  //          template <typename T> matrix<double> execute(std::tuple<std::vector<std::string> const &, T const &> const &value);
-  //        Examples:
-  //            Since this featurizer is copying values per grain, we just use one type of grain in the following examples.
-  //            A simple example would be horizon = 1 and we have offsets as [-3, 1] (which means lag 3 and lead 1)
-  //            +-------+-------+---------------------+
-  //            | grain | target| target_lag_3_lead_1 |
-  //            +=======+=======+=====================+
-  //            |Walmart| 8     | [[NAN], [  9]]      |
-  //            +-------+-------+---------------------+
-  //            |Walmart| 9     | [[NAN], [ 10]]      |
-  //            +-------+-------+---------------------+
-  //            |Walmart| 10    | [[NAN], [ 11]]      |
-  //            +-------+-------+---------------------+
-  //            |Walmart| 11    | [[  8], [NAN]]      |
-  //            +-------+-------+---------------------+
-  //            Values from the row above current row are copied.
-  //            A more complex example would be, assuming we have horizon = 2 and we have offsets as [-2, 2, 1, -1] (which means lag 2, lead 2, lead 1 and lag 1)
-  //            +-------+-------+-------------------------------------------------+
-  //            | grain | target|        target_lag_2_lead_2_lead_1_lag_1         |
-  //            +=======+=======+=================================================+
-  //            |Walmart| 8     | [[NAN, NAN], [  9,  10], [NAN, NAN], [ 8,   9]] |
-  //            +-------+-------+-------------------------------------------------+
-  //            |Walmart| 9     | [[NAN, NAN], [ 10,  11], [NAN,   8], [ 9,  10]] |
-  //            +-------+-------+-------------------------------------------------+
-  //            |Walmart| 10    | [[NAN,   8], [ 11, NAN], [  8,   9], [10,  11]] |
-  //            +-------+-------+-------------------------------------------------+
-  //            |Walmart| 11    | [[  8,   9], [NAN, NAN], [  9,  10], [11, NAN]] |
-  //            +-------+-------+-------------------------------------------------+
-  //            Basically, if we have an offset of k for the row with row index t,
-  //            target_lag_k[t] = target[t - horizon + k + 1]
+  // Copying values from prior or future per grain. Works for general time series data sets.
+  // The Horizon represents the maximum value in a range [1, N], where each element in that range is a delta applied to each offset. The resulting matrix will be in the form:
+  // [
+  // [value[offset[0] - N], value[offset[0] - (N - 1)], ..., value[offset[0] - 1]],
+  // [value[offset[1] - N], value[offset[1] - (N - 1)], ..., value[offset[1] - 1]],
+  // ...
+  // [value[offset[K - 1] - N], value[offset[K - 1] - (N - 1)], ..., value[offset[K - 1] - 1]]
+  // ]
+  // The resulting matrix size is K rows x N cols, where K is the number of offsets and N is the horizon.
+  // Horizon and offsets should be passed in during construction. Offsets are passed in as a vector of ints so multiple lag orders can be applied within one featurizer call.
+  // Output type is a tuple of vector of string, which representing grains, and a matrix. The matrix is of optional<T> where rows are grouped by different offsets and columns are grouped by horizon.
+  // C++-style pseudo signature:
+  //   template <typename T> tuple<vector<string>,matrix<T?>> execute(std::vector<std::string> const &, T const &> const &value);
+  // Examples:
+  //     Since this featurizer is copying values per grain, we just use one type of grain in the following examples.
+  //     A simple example would be horizon = 1 and we have offsets as [-3, 1] (which means lag 3 and lead 1)
+  //     +-------+-------+---------------------+
+  //     | grain | target| target_lag_3_lead_1 |
+  //     +=======+=======+=====================+
+  //     |Walmart| 8     | [[NAN], [  9]]      |
+  //     +-------+-------+---------------------+
+  //     |Walmart| 9     | [[NAN], [ 10]]      |
+  //     +-------+-------+---------------------+
+  //     |Walmart| 10    | [[NAN], [ 11]]      |
+  //     +-------+-------+---------------------+
+  //     |Walmart| 11    | [[  8], [NAN]]      |
+  //     +-------+-------+---------------------+
+  //     Values from the row above current row are copied.
+  //     A more complex example would be, assuming we have horizon = 2 and we have offsets as [-2, 2, 1, -1] (which means lag 2, lead 2, lead 1 and lag 1)
+  //     +-------+-------+-------------------------------------------------+
+  //     | grain | target|        target_lag_2_lead_2_lead_1_lag_1         |
+  //     +=======+=======+=================================================+
+  //     |Walmart| 8     | [[NAN, NAN], [  9,  10], [NAN, NAN], [ 8,   9]] |
+  //     +-------+-------+-------------------------------------------------+
+  //     |Walmart| 9     | [[NAN, NAN], [ 10,  11], [NAN,   8], [ 9,  10]] |
+  //     +-------+-------+-------------------------------------------------+
+  //     |Walmart| 10    | [[NAN,   8], [ 11, NAN], [  8,   9], [10,  11]] |
+  //     +-------+-------+-------------------------------------------------+
+  //     |Walmart| 11    | [[  8,   9], [NAN, NAN], [  9,  10], [11, NAN]] |
+  //     +-------+-------+-------------------------------------------------+
+  //     Basically, if we have an offset of k for the row with row index t,
+  //     target_lag_k[t] = target[t - horizon + k + 1]
   //)DOC";
 
   MS_FEATURIZERS_OPERATOR_SCHEMA(LagLeadOperatorTransformer)
@@ -741,6 +741,11 @@ void RegisterLagLeadOperatorFeaturizerVer1() {
           "T")
       .Output(
           0,
+          "OutputGrains",
+          "Grains tensor of shape [R][K]",
+          "GrainT")
+      .Output(
+          1,
           "Output",
           "Output tensor of shape [R][P][Q]",
           "OutputT")
@@ -762,7 +767,8 @@ void RegisterLagLeadOperatorFeaturizerVer1() {
           "No information is available")
       .TypeAndShapeInferenceFunction(
           [](ONNX_NAMESPACE::InferenceContext& ctx) {
-            propagateElemTypeFromDtypeToOutput(ctx, ONNX_NAMESPACE::TensorProto_DataType_DOUBLE, 0);
+            propagateElemTypeFromInputToOutput(ctx, 1, 0);
+            propagateElemTypeFromDtypeToOutput(ctx, ONNX_NAMESPACE::TensorProto_DataType_DOUBLE, 1);
             if (hasInputShape(ctx, 1) && hasInputShape(ctx, 2)) {
               const auto& grains_shape = getInputShape(ctx, 1);
               const auto& target_shape = getInputShape(ctx, 2);
@@ -772,11 +778,12 @@ void RegisterLagLeadOperatorFeaturizerVer1() {
               if (target_shape.dim_size() != 1) {
                 fail_shape_inference("Expecting Target to have 1 dimensions");
               }
+              propagateShapeFromInputToOutput(ctx, 1, 0);
               ONNX_NAMESPACE::TensorShapeProto shape;
               *shape.add_dim() = grains_shape.dim(0);
               shape.add_dim();
               shape.add_dim();
-              ONNX_NAMESPACE::updateOutputShape(ctx, 0, shape);
+              ONNX_NAMESPACE::updateOutputShape(ctx, 1, shape);
             }
           });
 }
