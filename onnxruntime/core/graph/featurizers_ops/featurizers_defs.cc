@@ -1839,6 +1839,53 @@ void RegisterStandardScaleWrapperFeaturizerVer1() {
           });
 }
 
+// void RegisterStringFeaturizerVer1() {
+//   //static const char* doc = R"DOC(
+//   //      Converts the input into a string representation based on the input's type.
+
+//   //      C++-style pseudo signature:
+//   //        template <typename T> string execute(T const &value);
+
+//   //      Examples:
+//   //        execute(1) -> "1"
+//   //        execute(3.14) -> "3.14"
+//   //)DOC";
+
+//   MS_FEATURIZERS_OPERATOR_SCHEMA(StringTransformer)
+//       .SinceVersion(1)
+//       .SetDomain(kMSFeaturizersDomain)
+//       .Input(
+//           0,
+//           "State",
+//           "State generated during training that is used for prediction",
+//           "T0")
+//       .Input(
+//           1,
+//           "Input",
+//           "No information is available",
+//           "InputT")
+//       .Output(
+//           0,
+//           "Output",
+//           "No information is available",
+//           "tensor(string)")
+//       .TypeConstraint(
+//           "T0",
+//           {"tensor(uint8)"},
+//           "No information is available")
+//       .TypeConstraint(
+//           "InputT",
+//           {"tensor(int8)", "tensor(int16)", "tensor(int32)", "tensor(int64)", "tensor(uint8)", "tensor(uint16)", "tensor(uint32)", "tensor(uint64)", "tensor(float)", "tensor(double)", "tensor(bool)", "tensor(string)"},
+//           "No information is available")
+//       .TypeAndShapeInferenceFunction(
+//           [](ONNX_NAMESPACE::InferenceContext& ctx) {
+//             propagateElemTypeFromDtypeToOutput(ctx, ONNX_NAMESPACE::TensorProto_DataType_STRING, 0);
+//             if (hasInputShape(ctx, 1)) {
+//               propagateShapeFromInputToOutput(ctx, 1, 0);
+//             }
+//           });
+// }
+
 void RegisterStringFeaturizerVer1() {
   //static const char* doc = R"DOC(
   //      Converts the input into a string representation based on the input's type.
@@ -1875,7 +1922,7 @@ void RegisterStringFeaturizerVer1() {
           "No information is available")
       .TypeConstraint(
           "InputT",
-          {"tensor(int8)", "tensor(int16)", "tensor(int32)", "tensor(int64)", "tensor(uint8)", "tensor(uint16)", "tensor(uint32)", "tensor(uint64)", "tensor(float)", "tensor(double)", "tensor(bool)", "tensor(string)"},
+          {"tensor(string)"},
           "No information is available")
       .TypeAndShapeInferenceFunction(
           [](ONNX_NAMESPACE::InferenceContext& ctx) {

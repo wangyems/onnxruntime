@@ -1,0 +1,15 @@
+build.bat --config RelWithDebInfo --use_featurizers --cmake_generator "Visual Studio 15 2017"  --skip_submodule_sync --skip_tests
+..\build\Windows\RelWithDebInfo\onnxruntime_graph.dir\RelWithDebInfo\featurizers_defs.obj
+..\build\Windows\RelWithDebInfo\onnxruntime_providers.dir\RelWithDebInfo
+
+build config:
+--config RelWithDebInfo
+
+baseline:
+string_transformer.obj: 1691k
+
+test:
+- limit only use Traits<T> in StringTransformer(eliminate 3 other functions with template) -> string_transformer.obj: 1453k
+- only instantiate type string(ort wrapper has template/featurizer has template) -> string_transformer.obj: 892K
+- only instantiate type string(ort wrapper no template/featurizer has template) -> string_transformer.obj: 880K
+- only instantiate type string(ort wrapper no template/featurizer no template) -> string_transformer.obj:
